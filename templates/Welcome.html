@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome | Insurance Premium Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://cdn-res.keymedia.com/cdn-cgi/image/w=840,h=504,f=auto/https://cdn-res.keymedia.com/cms/images/us/026/0270_638684917663792059.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+        }
+        .overlay {
+            background-color: rgba(0,0,0,0.6);
+            padding: 100px 30px;
+            min-height: 100vh;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .bmi-link {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .bmi-link a {
+            color: #FFD700;
+            text-decoration: underline;
+        }
+        .bmi-link a:hover {
+            color: #FFA500;
+        }
+        a.button {
+            display: inline-block;
+            padding: 15px 30px;
+            margin-top: 30px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        a.button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="overlay">
+    <h1>Welcome to the Insurance Premium Predictor</h1>
+    <p>Click below to estimate your insurance cost based on your profile</p>
+
+    <div class="bmi-link">
+        Do you know your Body Mass Index (BMI)?<br>
+        If not, <a href="/bmi" target="_blank">find out here</a>
+    </div>
+
+    <a id="start-btn" href="/predict-form" class="button" style="display:none;">Start Prediction</a>
+</div>
+<script>
+    window.onload = function() {
+        if (localStorage.getItem('bmiChecked') === 'true') {
+            document.getElementById('start-btn').style.display = 'inline-block';
+        }
+    };
+</script>
+</body>
+</html>

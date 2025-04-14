@@ -1,0 +1,7 @@
+Model,RMSE,R2_Score,Best_Params
+LinearRegression,5796.556335884075,0.7835726930039906,Default
+DecisionTree,4776.261123134656,0.8530572857587291,{'max_depth': 3}
+RandomForest,4423.844080980672,0.8739416677804271,"{'n_estimators': 50, 'max_depth': 5}"
+GradientBoosting,4324.433047807108,0.8795434865327185,"{'n_estimators': 100, 'learning_rate': 0.1}"
+XGBoost,4335.435195417694,0.8789297800862123,"{'subsample': 1.0, 'reg_lambda': 2, 'reg_alpha': 1, 'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.1, 'gamma': 0.1, 'colsample_bytree': 1.0}"
+KNN,11187.528314073224,0.19380476237396294,{'n_neighbors': 5}

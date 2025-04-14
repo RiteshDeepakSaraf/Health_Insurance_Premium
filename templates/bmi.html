@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            background: url('https://t3.ftcdn.net/jpg/01/19/41/24/360_F_119412445_fFHCOumahexuL1TGzStDkuNZ88OeFkvl.jpg');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Body Mass Index (BMI) Calculator</h2>
+        <input type="number" id="weight" placeholder="Weight (kg)" required>
+        <input type="number" id="height" placeholder="Height (cm)" required>
+        <button onclick="calculateBMI()">Calculate</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            let weight = parseFloat(document.getElementById('weight').value);
+            let height = parseFloat(document.getElementById('height').value) / 100;
+            if (weight > 0 && height > 0) {
+                let bmi = (weight / (height * height)).toFixed(2);
+                document.getElementById('result').innerHTML = `Your BMI is: ${bmi}`;
+                localStorage.setItem('bmiChecked', 'true');
+            } else {
+                document.getElementById('result').innerHTML = "Please enter valid values.";
+            }
+        }
+    </script>
+</body>
+</html>

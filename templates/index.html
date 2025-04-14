@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Premium Predictor</title>
+    <style>
+        :root {
+            --bg-light: rgba(255, 255, 255, 0.92);
+            --bg-dark: rgba(40, 44, 52, 0.92);
+            --text-light: #2c3e50;
+            --text-dark: #f1f1f1;
+            --primary: #007BFF;
+            --primary-dark: #0056b3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://t3.ftcdn.net/jpg/06/60/83/98/360_F_660839845_wtybTkrA2n5gFYB4SbBOZ2aOSO5ql64e.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light);
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .dark-mode {
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: var(--bg-light);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: background-color 0.5s;
+        }
+
+        .dark-mode .container {
+            background-color: var(--bg-dark);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .theme-toggle {
+            text-align: right;
+            padding: 10px 30px 0 30px;
+        }
+
+        .theme-toggle button {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .theme-toggle button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            height: 42px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button[type="submit"] {
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .result {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="theme-toggle">
+    <button onclick="toggleTheme()">Toggle Light/Dark</button>
+</div>
+
+<div class="container">
+    <h2>Insurance Premium Predictor</h2>
+
+    <!-- Main form for prediction -->
+    <form action="/predict" method="post">
+        <div class="form-group">
+            <label>Age:</label>
+            <input type="number" name="age" value="{{ request.form.age or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Sex:</label>
+            <select name="sex_male" required>
+                <option value="1" {% if request.form.sex_male == '1' %}selected{% endif %}>Male</option>
+                <option value="0" {% if request.form.sex_male == '0' %}selected{% endif %}>Female</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>BMI:</label>
+            <input type="number" step="0.01" name="bmi" value="{{ request.form.bmi or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Smoker:</label>
+            <select name="smoker_yes" required>
+                <option value="1" {% if request.form.smoker_yes == '1' %}selected{% endif %}>Yes</option>
+                <option value="0" {% if request.form.smoker_yes == '0' %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Children:</label>
+            <input type="number" name="children" value="{{ request.form.children or '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Region:</label>
+            <select name="region" required>
+                <option value="northeast" {% if request.form.region == 'northeast' %}selected{% endif %}>Northeast</option>
+                <option value="northwest" {% if request.form.region == 'northwest' %}selected{% endif %}>Northwest</option>
+                <option value="southeast" {% if request.form.region == 'southeast' %}selected{% endif %}>Southeast</option>
+                <option value="southwest" {% if request.form.region == 'southwest' %}selected{% endif %}>Southwest</option>
+            </select>
+        </div>
+
+        <div class="button-container">
+            <button type="submit">Predict</button>
+        </div>
+
+        {% if prediction_text %}
+        <div class="result">{{ prediction_text }}</div>
+        {% endif %}
+    </form>
+
+    <!-- PDF download form (separate) -->
+    {% if prediction_text %}
+    <form method="POST" action="/generate-pdf">
+        <input type="hidden" name="age" value="{{ request.form.age }}">
+        <input type="hidden" name="bmi" value="{{ request.form.bmi }}">
+        <input type="hidden" name="children" value="{{ request.form.children }}">
+        <input type="hidden" name="sex_male" value="{{ request.form.sex_male }}">
+        <input type="hidden" name="smoker_yes" value="{{ request.form.smoker_yes }}">
+        <input type="hidden" name="region" value="{{ request.form.region }}">
+        <input type="hidden" name="prediction_text" value="{{ prediction_text }}">
+        <div class="button-container">
+            <button type="submit">Download PDF Report</button>
+        </div>
+    </form>
+    {% endif %}
+
+</div>
+
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+    }
+</script>
+
+</body>
+</html>
